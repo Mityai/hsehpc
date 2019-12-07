@@ -121,6 +121,40 @@ Time (GPU): 0.351 s
 ```
 ---
 
+#### Сверточная матрица 21x21
+```
+height: 1000
+width: 1000
+blur kernel size: 21x21
+Time (CPU): 3.186 s
+Time (GPU): 0.252 s
+```
+---
+```
+height: 2000
+width: 2000
+blur kernel size: 21x21
+Time (CPU): 12.729 s
+Time (GPU): 0.354 s
+```
+---
+```
+height: 2500
+width: 2500
+blur kernel size: 21x21
+Time (CPU): 19.849 s
+Time (GPU): 0.578 s
+```
+---
+```
+height: 2671
+width: 4006
+blur kernel size: 21x21
+Time (CPU): 34.132 s
+Time (GPU): 0.541 s
+```
+---
+
 ### Пример размытой картинки
 #### Картинка: img_srcs/putin.jpg
 Исходная:
