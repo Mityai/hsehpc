@@ -62,7 +62,7 @@ void read_rgb(size_t height, size_t width, size_t max_height, size_t max_width,
          int value;
          std::cin >> value;
          if (i < max_height && j < max_width) {
-           (*channel)[IDX(i, j, width)] = value;
+           (*channel)[IDX(i, j, max_width)] = value;
          }
        }
      }
