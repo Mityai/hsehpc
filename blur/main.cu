@@ -11,9 +11,9 @@
 
 using uchar = unsigned char;
 
-const size_t BLOCK_SIZE = 16;
+const size_t BLOCK_SIZE = 9;
 
-const int BLUR_KERNEL_WIDTH = 9;
+const int BLUR_KERNEL_WIDTH = 21;
 const float BLUR_KERNEL_SIGMA = 4;
 const float PI = acos(-1);
 
@@ -48,7 +48,7 @@ void allocate(T** data, size_t n, size_t m) {
 }
 
 template <typename T>
-T sqr(T x) {
+__device__ __host__ T sqr(T x) {
   return x * x;
 }
 
@@ -69,28 +69,58 @@ void read_rgb(size_t height, size_t width, size_t max_height, size_t max_width,
    }
 }
 
+__global__ void filter_matrix(size_t height, size_t width, float sigma, float* filter, float* sum, float pi) {
+  const size_t row = blockIdx.y * blockDim.y + threadIdx.y;
+  const size_t col = blockIdx.x * blockDim.x + threadIdx.x;
+  if (row >= height || col >= width) {
+    return;
+  }
+
+  const size_t half_height = height / 2;
+  const size_t half_width = width / 2;
+
+  const int delta_row = int(row) - int(half_height);
+  const int delta_col = int(col) - int(half_width);
+
+  const float value = expf(-(sqr(delta_row) + sqr(delta_col)) / (2 * sqr(sigma))) / (2 * pi * sqr(sigma));
+  filter[IDX(row, col, width)] = value;
+  atomicAdd(sum, value);
+}
+
+__global__ void divide_matrix(size_t height, size_t width, float* filter, float sum) {
+  const size_t row = blockIdx.y * blockDim.y + threadIdx.y;
+  const size_t col = blockIdx.x * blockDim.x + threadIdx.x;
+  if (row >= height || col >= width) {
+    return;
+  }
+  filter[IDX(row, col, width)] /= sum;
+}
+
 void get_filter_gpu(float** device_filter) {
-  float* filter;
-  allocate(&filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
-  const int half_width = BLUR_KERNEL_WIDTH / 2;
-
-  float sum = 0;
-  for (int i = -half_width; i <= half_width; ++i) {
-    for (int j = -half_width; j <= half_width; ++j) {
-      const float value = expf(-(sqr(i) + sqr(j)) / (2 * sqr(BLUR_KERNEL_SIGMA))) / (2 * PI * sqr(BLUR_KERNEL_SIGMA));
-      filter[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] = value;
-      sum += value;
-    }
-  }
-
-  for (int i = -half_width; i <= half_width; ++i) {
-    for (int j = -half_width; j <= half_width; ++j) {
-      filter[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] /= sum;
-    }
-  }
-
   allocate_on_gpu(device_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
-  copy_to_gpu(filter, *device_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
+
+  float* device_sum;
+  allocate_on_gpu(&device_sum, 1, 1);
+  memset_on_gpu(device_sum, 1, 1);
+
+  const dim3 dim_block(BLOCK_SIZE, BLOCK_SIZE);
+  const dim3 dim_grid((BLUR_KERNEL_WIDTH + dim_block.x - 1) / dim_block.x, (BLUR_KERNEL_WIDTH + dim_block.y - 1) / dim_block.y);
+
+  filter_matrix<<<dim_grid, dim_block>>>(BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH, BLUR_KERNEL_SIGMA, *device_filter, device_sum, PI);
+  float sum;
+  copy_to_host(device_sum, &sum, 1, 1);
+  divide_matrix<<<dim_grid, dim_block>>>(BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH, *device_filter, sum);
+
+  float* host_filter;
+  allocate(&host_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
+  copy_to_host(*device_filter, host_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
+  std::cerr << "gpu:" << std::endl;
+  for (size_t i = 0; i < BLUR_KERNEL_WIDTH; ++i) {
+    for (size_t j = 0; j < BLUR_KERNEL_WIDTH; ++j) {
+      std::cerr << host_filter[IDX(i, j, BLUR_KERNEL_WIDTH)] << ' ';
+    }
+    std::cerr << std::endl;
+  }
 }
 
 __device__ size_t get_pos(int initial_pos, int delta, int bound) {
@@ -172,10 +202,13 @@ void get_filter_cpu(float** filter) {
     }
   }
 
+  std::cerr << "cpu:" << std::endl;
   for (int i = -half_width; i <= half_width; ++i) {
     for (int j = -half_width; j <= half_width; ++j) {
       (*filter)[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] /= sum;
+      std::cerr << (*filter)[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] << ' ';
     }
+    std::cerr << std::endl;
   }
 }
 
