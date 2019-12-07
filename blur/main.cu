@@ -110,17 +110,6 @@ void get_filter_gpu(float** device_filter) {
   float sum;
   copy_to_host(device_sum, &sum, 1, 1);
   divide_matrix<<<dim_grid, dim_block>>>(BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH, *device_filter, sum);
-
-  float* host_filter;
-  allocate(&host_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
-  copy_to_host(*device_filter, host_filter, BLUR_KERNEL_WIDTH, BLUR_KERNEL_WIDTH);
-  std::cerr << "gpu:" << std::endl;
-  for (size_t i = 0; i < BLUR_KERNEL_WIDTH; ++i) {
-    for (size_t j = 0; j < BLUR_KERNEL_WIDTH; ++j) {
-      std::cerr << host_filter[IDX(i, j, BLUR_KERNEL_WIDTH)] << ' ';
-    }
-    std::cerr << std::endl;
-  }
 }
 
 __device__ size_t get_pos(int initial_pos, int delta, int bound) {
@@ -202,13 +191,10 @@ void get_filter_cpu(float** filter) {
     }
   }
 
-  std::cerr << "cpu:" << std::endl;
   for (int i = -half_width; i <= half_width; ++i) {
     for (int j = -half_width; j <= half_width; ++j) {
       (*filter)[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] /= sum;
-      std::cerr << (*filter)[IDX(i + half_width, j + half_width, BLUR_KERNEL_WIDTH)] << ' ';
     }
-    std::cerr << std::endl;
   }
 }
 
