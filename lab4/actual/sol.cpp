@@ -28,6 +28,6 @@ int main(int argc, char* argv[]) {
 
   for (size_t idx = 0; idx < POINTS; ++idx) {
     double x = H * idx;
-    printf("x = %.2lf, value = %.4lf\n", x, calc_value(T0, K, T, L, x));
+    printf("x = %.2lf, value = %.8lf\n", x, calc_value(T0, K, T, L, x));
   }
 }

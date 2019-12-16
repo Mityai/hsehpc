@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
   const double H = atof(argv[3]);             // шаг по пространству
   const unsigned int STEPS = atoi(argv[4]);   // количество шагов
   const unsigned int POINTS = 1.0 / H + 1;
-  assert((POINTS - 1) * H == 1.0);
 
   const double coef = K * TAU / H / H;
 
@@ -21,6 +20,8 @@ int main(int argc, char* argv[]) {
 
   if (world.rank() == 0) {
     std::cout << "k = " << K << ", tau = " << TAU << ", h = " << H << ", steps = " << STEPS << ", points = " << POINTS << std::endl;
+    std::cout << "k * tau / h^2 = " << coef << std::endl;
+    assert(coef < 1.0);
   }
 
   const size_t points_default_num = POINTS / world.size();
@@ -85,9 +86,14 @@ int main(int argc, char* argv[]) {
       sizes[i] = points_default_num + (i < POINTS % world.size());
     }
     mpi::gatherv(world, values[1 - STEPS % 2], result.data(), sizes, 0);
-    size_t step_size = 0.1 / H;
+    /*
+    for (size_t i = 0; i < POINTS / 10; ++i) {
+      printf("idx = %d, val = %.8lf\n", int(i), result[i]);
+    }
+    */
+    size_t step_size = (POINTS - 1) / 10;
     for (size_t idx = 0; idx < POINTS; idx += step_size) {
-      printf("x = %.2lf, value = %.4lf\n", idx * 0.1, result[idx]);
+      printf("x = %.2lf, value = %.8lf\n", static_cast<double>(idx) / (POINTS - 1), result[idx]);
     }
   } else {
     mpi::gatherv(world, values[1 - STEPS % 2], 0);
