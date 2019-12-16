@@ -47,6 +47,8 @@ x = 1.00, value = 0.00000000
 
 ## Сравнение времени работы
 
+Графики: https://github.com/Mityai/hsehpc/blob/master/lab4/plots/plots.ipynb
+
 ### 2000 точек
 
 <details><summary>1 процесс</summary>
