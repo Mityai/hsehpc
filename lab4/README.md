@@ -46,6 +46,8 @@ x = 1.00, value = 0.00000000
 
 ### Сравнение времени работы
 
+#### 2000 точек
+
 <details><summary>1 процесс</summary>
 
 ```
@@ -160,6 +162,126 @@ x = 0.80, value = 0.84270046
 x = 0.90, value = 0.52049972
 x = 1.00, value = 0.00000000
 mpirun -np 16 ./sol 0.0001 0.0002 0.0005 500000  52.15s user 0.27s system 1507% cpu 3.477 total
+```
+
+</details>
+
+#### 10000 точек
+
+<details><summary>1 процесс</summary>
+
+```
+$ time mpirun -np 1 ./sol 0.00001 0.0002 0.0001 500000
+k = 1e-05, tau = 0.0002, h = 0.0001, steps = 500000, points = 10001
+k * tau / h^2 = 0.2
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.97465263
+x = 0.20, value = 0.99999226
+x = 0.30, value = 1.00000000
+x = 0.40, value = 1.00000000
+x = 0.50, value = 1.00000000
+x = 0.60, value = 1.00000000
+x = 0.70, value = 1.00000000
+x = 0.80, value = 0.99999226
+x = 0.90, value = 0.97465263
+x = 1.00, value = 0.00000000
+mpirun -np 1 ./sol 0.00001 0.0002 0.0001 500000  96.98s user 0.04s system 99% cpu 1:37.18 total
+```
+
+</details>
+
+---
+
+<details><summary>2 процесса</summary>
+
+```
+$ time mpirun -np 2 ./sol 0.00001 0.0002 0.0001 500000
+k = 1e-05, tau = 0.0002, h = 0.0001, steps = 500000, points = 10001
+k * tau / h^2 = 0.2
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.97465263
+x = 0.20, value = 0.99999226
+x = 0.30, value = 1.00000000
+x = 0.40, value = 1.00000000
+x = 0.50, value = 1.00000000
+x = 0.60, value = 1.00000000
+x = 0.70, value = 1.00000000
+x = 0.80, value = 0.99999226
+x = 0.90, value = 0.97465263
+x = 1.00, value = 0.00000000
+mpirun -np 2 ./sol 0.00001 0.0002 0.0001 500000  103.12s user 0.08s system 199% cpu 51.754 total
+```
+
+</details>
+
+---
+
+<details><summary>4 процесса</summary>
+
+```
+$ time mpirun -np 4 ./sol 0.00001 0.0002 0.0001 500000
+k = 1e-05, tau = 0.0002, h = 0.0001, steps = 500000, points = 10001
+k * tau / h^2 = 0.2
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.97465263
+x = 0.20, value = 0.99999226
+x = 0.30, value = 1.00000000
+x = 0.40, value = 1.00000000
+x = 0.50, value = 1.00000000
+x = 0.60, value = 1.00000000
+x = 0.70, value = 1.00000000
+x = 0.80, value = 0.99999226
+x = 0.90, value = 0.97465263
+x = 1.00, value = 0.00000000
+mpirun -np 4 ./sol 0.00001 0.0002 0.0001 500000  120.64s user 0.75s system 375% cpu 32.308 total
+```
+
+</details>
+
+---
+
+<details><summary>8 процессов</summary>
+
+```
+$ time mpirun -np 8 ./sol 0.00001 0.0002 0.0001 500000
+k = 1e-05, tau = 0.0002, h = 0.0001, steps = 500000, points = 10001
+k * tau / h^2 = 0.2
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.97465263
+x = 0.20, value = 0.99999226
+x = 0.30, value = 1.00000000
+x = 0.40, value = 1.00000000
+x = 0.50, value = 1.00000000
+x = 0.60, value = 1.00000000
+x = 0.70, value = 1.00000000
+x = 0.80, value = 0.99999226
+x = 0.90, value = 0.97465263
+x = 1.00, value = 0.00000000
+mpirun -np 8 ./sol 0.00001 0.0002 0.0001 500000  136.32s user 0.59s system 769% cpu 17.785 total
+```
+
+</details>
+
+---
+
+<details><summary>16 процессов</summary>
+
+```
+$ time mpirun -np 16 ./sol 0.00001 0.0002 0.0001 500000
+k = 1e-05, tau = 0.0002, h = 0.0001, steps = 500000, points = 10001
+k * tau / h^2 = 0.2
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.97465263
+x = 0.20, value = 0.99999226
+x = 0.30, value = 1.00000000
+x = 0.40, value = 1.00000000
+x = 0.50, value = 1.00000000
+x = 0.60, value = 1.00000000
+x = 0.70, value = 1.00000000
+x = 0.80, value = 0.99999226
+x = 0.90, value = 0.97465263
+x = 1.00, value = 0.00000000
+mpirun -np 16 ./sol 0.00001 0.0002 0.0001 500000  166.59s user 1.03s system 1545% cpu 10.847 total
 ```
 
 </details>
