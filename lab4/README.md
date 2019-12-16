@@ -45,3 +45,121 @@ x = 1.00, value = 0.00000000
 Ошибка < 0.01
 
 ### Сравнение времени работы
+
+<details><summary>1 процесс</summary>
+
+```
+$ time mpirun -np 1 ./sol 0.0001 0.0002 0.0005 500000
+k = 0.0001, tau = 0.0002, h = 0.0005, steps = 500000, points = 2001
+k * tau / h^2 = 0.08
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.52049972
+x = 0.20, value = 0.84270046
+x = 0.30, value = 0.96610414
+x = 0.40, value = 0.99530007
+x = 0.50, value = 0.99918606
+x = 0.60, value = 0.99530007
+x = 0.70, value = 0.96610414
+x = 0.80, value = 0.84270046
+x = 0.90, value = 0.52049972
+x = 1.00, value = 0.00000000
+mpirun -np 1 ./sol 0.0001 0.0002 0.0005 500000  19.58s user 0.05s system 99% cpu 19.742 total
+```
+
+</details>
+
+---
+
+<details><summary>2 процесса</summary>
+
+```
+$ time mpirun -np 2 ./sol 0.0001 0.0002 0.0005 500000
+k = 0.0001, tau = 0.0002, h = 0.0005, steps = 500000, points = 2001
+k * tau / h^2 = 0.08
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.52049972
+x = 0.20, value = 0.84270046
+x = 0.30, value = 0.96610414
+x = 0.40, value = 0.99530007
+x = 0.50, value = 0.99918606
+x = 0.60, value = 0.99530007
+x = 0.70, value = 0.96610414
+x = 0.80, value = 0.84270046
+x = 0.90, value = 0.52049972
+x = 1.00, value = 0.00000000
+mpirun -np 2 ./sol 0.0001 0.0002 0.0005 500000  21.91s user 0.07s system 197% cpu 11.122 total
+```
+
+</details>
+
+---
+
+<details><summary>4 процесса</summary>
+
+```
+$ time mpirun -np 4 ./sol 0.0001 0.0002 0.0005 500000
+k = 0.0001, tau = 0.0002, h = 0.0005, steps = 500000, points = 2001
+k * tau / h^2 = 0.08
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.52049972
+x = 0.20, value = 0.84270046
+x = 0.30, value = 0.96610414
+x = 0.40, value = 0.99530007
+x = 0.50, value = 0.99918606
+x = 0.60, value = 0.99530007
+x = 0.70, value = 0.96610414
+x = 0.80, value = 0.84270046
+x = 0.90, value = 0.52049972
+x = 1.00, value = 0.00000000
+mpirun -np 4 ./sol 0.0001 0.0002 0.0005 500000  26.80s user 0.07s system 391% cpu 6.865 total
+```
+
+</details>
+
+---
+
+<details><summary>8 процессов</summary>
+
+```
+$ time mpirun -np 8 ./sol 0.0001 0.0002 0.0005 500000
+k = 0.0001, tau = 0.0002, h = 0.0005, steps = 500000, points = 2001
+k * tau / h^2 = 0.08
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.52049972
+x = 0.20, value = 0.84270046
+x = 0.30, value = 0.96610414
+x = 0.40, value = 0.99530007
+x = 0.50, value = 0.99918606
+x = 0.60, value = 0.99530007
+x = 0.70, value = 0.96610414
+x = 0.80, value = 0.84270046
+x = 0.90, value = 0.52049972
+x = 1.00, value = 0.00000000
+mpirun -np 8 ./sol 0.0001 0.0002 0.0005 500000  35.68s user 0.14s system 773% cpu 4.634 total
+```
+
+</details>
+
+---
+
+<details><summary>16 процессов</summary>
+
+```
+$ time mpirun -np 16 ./sol 0.0001 0.0002 0.0005 500000
+k = 0.0001, tau = 0.0002, h = 0.0005, steps = 500000, points = 2001
+k * tau / h^2 = 0.08
+x = 0.00, value = 0.00000000
+x = 0.10, value = 0.52049972
+x = 0.20, value = 0.84270046
+x = 0.30, value = 0.96610414
+x = 0.40, value = 0.99530007
+x = 0.50, value = 0.99918606
+x = 0.60, value = 0.99530007
+x = 0.70, value = 0.96610414
+x = 0.80, value = 0.84270046
+x = 0.90, value = 0.52049972
+x = 1.00, value = 0.00000000
+mpirun -np 16 ./sol 0.0001 0.0002 0.0005 500000  52.15s user 0.27s system 1507% cpu 3.477 total
+```
+
+</details>
